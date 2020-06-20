@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class CryptocurrencyConverter {
 
-	private String cryptocurrency;
+	private final String cryptocurrency;
 
-	private BigDecimal cryptocurrencyAmount;
+	private final BigDecimal cryptocurrencyAmount;
 
-	private String currency;
+	private final String currency;
 
 	public CryptocurrencyConverter(String cryptocurrency, BigDecimal cryptocurrencyAmount, String currency) {
 		this.cryptocurrency = cryptocurrency;
