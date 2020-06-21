@@ -1,0 +1,3 @@
+BTC=invalid
+ETH=5
+XRP=2000

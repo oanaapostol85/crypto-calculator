@@ -7,9 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static com.swissre.cryptocalculator.TestUtils.getFilePathFromResources;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.swissre.cryptocalculator.FilePath.getFilePathFromResources;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CryptoWalletFileReaderTest {
 
@@ -23,6 +22,14 @@ public class CryptoWalletFileReaderTest {
         assertEquals(BigDecimal.TEN, cryptoCurrencyAmtMap.get("BTC"));
         assertEquals(BigDecimal.valueOf(5), cryptoCurrencyAmtMap.get("ETH"));
         assertEquals(BigDecimal.valueOf(2000), cryptoCurrencyAmtMap.get("XRP"));
+    }
+
+    @Test
+    public void givenInvalidAmtInFile_whenReadFile_thenException() {
+        CryptoWalletFileReader cryptoWalletFileReader = new CryptoWalletFileReader();
+
+        assertThrows(NumberFormatException.class,
+                () -> cryptoWalletFileReader.readFile(getFilePathFromResources("bobs_crypto_invalid_amt.txt")));
     }
 
     @Test

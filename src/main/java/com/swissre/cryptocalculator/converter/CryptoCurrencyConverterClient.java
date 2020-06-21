@@ -33,7 +33,7 @@ public class CryptoCurrencyConverterClient {
         }
     }
 
-    private HttpURLConnection getConnection(URL url) {
+    HttpURLConnection getConnection(URL url) {
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -49,7 +49,7 @@ public class CryptoCurrencyConverterClient {
         }
     }
 
-    private BigDecimal readConversionRateFromResponse(HttpURLConnection connection) {
+    BigDecimal readConversionRateFromResponse(HttpURLConnection connection) {
         int responseCode = getResponseCode(connection);
         if (responseCode == 200) {
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
@@ -68,7 +68,7 @@ public class CryptoCurrencyConverterClient {
                 "Response code: %d", responseCode));
     }
 
-    private int getResponseCode(HttpURLConnection connection) {
+    int getResponseCode(HttpURLConnection connection) {
         int responseCode;
         try {
             responseCode = connection.getResponseCode();
@@ -80,7 +80,7 @@ public class CryptoCurrencyConverterClient {
         return responseCode;
     }
 
-    private URL getUrl(String cryptoCurrency, String currency) {
+    URL getUrl(String cryptoCurrency, String currency) {
         try {
             return new URL(format(CRYPTOCURRENCY_TO_CURRENCY_URL_FORMAT,
                     CRYPTOCURRENCY_QUERY_PARAM,
