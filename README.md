@@ -1,5 +1,5 @@
 # Crypto Wallet Calculator
-Cryptocurrency to currency calculator.
+Crypto currency to currency calculator.
 Application input: 
 - the path of the file containing cryptocurrencies amount
 - the conversion currency 
@@ -8,7 +8,7 @@ Application input:
 - Run the following command in the project root:
 
       ./gradlew run
-- Enter the path of the file containing cryptocurrencies amount when prompted 
+- Enter the path of the file containing crypto currencies amount when prompted 
 - Enter the currency in ISO format( e.g. EUR) when prompted 
     
 ## Crypto Wallet File Content Example  

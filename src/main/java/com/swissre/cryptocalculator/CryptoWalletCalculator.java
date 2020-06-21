@@ -1,7 +1,6 @@
 package com.swissre.cryptocalculator;
 
-import com.swissre.cryptocalculator.converter.CryptocurrencyConverter;
-import com.swissre.cryptocalculator.filereader.CryptoWalletFileReader;
+import com.swissre.cryptocalculator.converter.CryptoCurrencyConverter;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -11,51 +10,70 @@ import static java.lang.String.format;
 
 public class CryptoWalletCalculator {
 
-	private String cryptoWalletFilePath;
+    private String cryptoWalletFilePath;
 
-	private String currency;
+    private String currency;
 
-	private Map<String, BigDecimal> cryptocurrencyConvertedAmtMap;
+    private CryptoCurrencyConverter cryptoCurrencyConverter;
 
-	public CryptoWalletCalculator withCryptoWalletFilePath(String cryptoWalletFilePath) {
-		this.cryptoWalletFilePath = cryptoWalletFilePath;
-		return this;
-	}
+    private Map<String, BigDecimal> cryptoCurrencyConvertedAmtMap;
 
-	public CryptoWalletCalculator withCurrency(String currency) {
-		this.currency = currency;
-		return this;
-	}
+    private BigDecimal totalAmt;
 
-	public CryptoWalletCalculator calculate() {
-		Map<String, BigDecimal> cryptocurrencyAmtMap = new CryptoWalletFileReader(cryptoWalletFilePath)
-				.readFile();
+    public CryptoWalletCalculator calculate() {
+        Map<String, BigDecimal> cryptoCurrencyAmtMap = new CryptoWalletFileReader()
+                .readFile(cryptoWalletFilePath);
 
-		cryptocurrencyConvertedAmtMap = cryptocurrencyAmtMap.entrySet()
-				.parallelStream()
-				.collect(Collectors.toMap(Map.Entry::getKey,
-						cryptocurrencyAmtEntry -> new CryptocurrencyConverter(cryptocurrencyAmtEntry.getKey(),
-								cryptocurrencyAmtEntry.getValue(),
-								currency)
-								.convert()));
-		return this;
-	}
+        cryptoCurrencyConvertedAmtMap = convert(cryptoCurrencyAmtMap, currency);
+        totalAmt = calculateTotalAmt(cryptoCurrencyConvertedAmtMap);
 
-	public void prettyPrint() {
-		cryptocurrencyConvertedAmtMap
-				.forEach((cryptocurrency, price) ->
-						System.out.println(format("%s=%.2f %s", cryptocurrency, price, currency)));
+        return this;
+    }
 
-		System.out.println(format("Total=%.2f %s", calculateTotalAmt(), currency));
-	}
+    public void prettyPrint() {
+        cryptoCurrencyConvertedAmtMap
+                .forEach((cryptoCurrency, price) ->
+                        System.out.println(format("%s=%.2f %s", cryptoCurrency, price, currency)));
 
-	BigDecimal calculateTotalAmt() {
-		return cryptocurrencyConvertedAmtMap.values()
-				.stream()
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
+        System.out.println(format("Total=%.2f %s", totalAmt, currency));
+    }
 
-	Map<String, BigDecimal> getCryptocurrencyConvertedAmtMap() {
-		return cryptocurrencyConvertedAmtMap;
-	}
+    private Map<String, BigDecimal> convert(Map<String, BigDecimal> cryptoCurrencyAmtMap, String currency) {
+        return cryptoCurrencyAmtMap.entrySet()
+                .parallelStream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        cryptoCurrencyAmtEntry -> convert(cryptoCurrencyAmtEntry.getKey(),
+                                cryptoCurrencyAmtEntry.getValue(),
+                                currency)));
+    }
+
+    private BigDecimal convert(String cryptoCurrency, BigDecimal cryptoCurrencyAmount, String currency) {
+        return cryptoCurrencyConverter.convert(cryptoCurrency, cryptoCurrencyAmount, currency);
+    }
+
+    private BigDecimal calculateTotalAmt(Map<String, BigDecimal> cryptoCurrencyConvertedAmtMap) {
+        return cryptoCurrencyConvertedAmtMap.values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void setCryptoWalletFilePath(String cryptoWalletFilePath) {
+        this.cryptoWalletFilePath = cryptoWalletFilePath;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setCryptoCurrencyConverter(CryptoCurrencyConverter cryptoCurrencyConverter) {
+        this.cryptoCurrencyConverter = cryptoCurrencyConverter;
+    }
+
+    public Map<String, BigDecimal> getCryptoCurrencyConvertedAmtMap() {
+        return cryptoCurrencyConvertedAmtMap;
+    }
+
+    public BigDecimal getTotalAmt() {
+        return totalAmt;
+    }
 }

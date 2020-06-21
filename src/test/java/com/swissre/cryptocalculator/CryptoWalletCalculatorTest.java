@@ -1,5 +1,6 @@
 package com.swissre.cryptocalculator;
 
+import com.swissre.cryptocalculator.converter.CryptoCurrencyConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,39 +17,50 @@ public class CryptoWalletCalculatorTest {
 
     @BeforeEach
     public void setUp() {
-        cryptoWalletCalculator = new CryptoWalletCalculator()
+        CryptoCurrencyConverter cryptoCurrencyConverter = new CryptoCurrencyConverter() {
+            @Override
+            public BigDecimal convert(String cryptoCurrency, BigDecimal cryptoCurrencyAmount, String currency) {
+                return cryptoCurrencyAmount.multiply(BigDecimal.valueOf(8311.44));
+            }
+        };
+
+        cryptoWalletCalculator = new CryptoWalletCalculatorBuilder()
                 .withCryptoWalletFilePath(getFilePathFromResources("bobs_crypto.txt"))
-                .withCurrency("EUR");
+                .withCurrency("EUR")
+                .withCryptoCurrencyConverter(cryptoCurrencyConverter)
+                .build();
     }
 
     @Test
     public void givenValidInputFile_whenCalculate_thenConvertedAmtMapIsCorrectlyReturned() {
         cryptoWalletCalculator = cryptoWalletCalculator.calculate();
 
-        Map<String, BigDecimal> cryptocurrencyConvertedAmtMap = cryptoWalletCalculator.getCryptocurrencyConvertedAmtMap();
+        Map<String, BigDecimal> cryptoCurrencyConvertedAmtMap = cryptoWalletCalculator.getCryptoCurrencyConvertedAmtMap();
 
-        assertEquals(BigDecimal.valueOf(83114.4).doubleValue(), cryptocurrencyConvertedAmtMap.get("BTC").doubleValue());
-        assertEquals(BigDecimal.valueOf(41557.2).doubleValue(), cryptocurrencyConvertedAmtMap.get("ETH").doubleValue());
-        assertEquals(BigDecimal.valueOf(16622880).doubleValue(), cryptocurrencyConvertedAmtMap.get("XRP").doubleValue());
+        assertEquals(BigDecimal.valueOf(83114.4).doubleValue(), cryptoCurrencyConvertedAmtMap.get("BTC").doubleValue());
+        assertEquals(BigDecimal.valueOf(41557.2).doubleValue(), cryptoCurrencyConvertedAmtMap.get("ETH").doubleValue());
+        assertEquals(BigDecimal.valueOf(16622880).doubleValue(), cryptoCurrencyConvertedAmtMap.get("XRP").doubleValue());
     }
 
     @Test
-    public void givenValidInputFile_whenCalculateTotalAmt_thenTotalAmtIsReturned() {
+    public void givenValidInputFile_whenCalculate_thenTotalAmtMapIsCorrectlyReturned() {
         cryptoWalletCalculator = cryptoWalletCalculator.calculate();
 
-        BigDecimal totalAmt = cryptoWalletCalculator.calculateTotalAmt();
+        BigDecimal totalAmt = cryptoWalletCalculator.getTotalAmt();
 
         assertEquals(BigDecimal.valueOf(16747551.6).doubleValue(), totalAmt.doubleValue());
     }
 
     @Test
     public void givenFilePathDoesNotExist_whenCalculate_thenEmptyMapIsReturned() {
-        cryptoWalletCalculator = cryptoWalletCalculator
+        cryptoWalletCalculator = new CryptoWalletCalculatorBuilder()
                 .withCryptoWalletFilePath("not_existing_file.txt")
+                .withCurrency("EUR")
+                .build()
                 .calculate();
 
-        Map<String, BigDecimal> cryptocurrencyConvertedAmtMap = cryptoWalletCalculator.getCryptocurrencyConvertedAmtMap();
+        Map<String, BigDecimal> cryptoCurrencyConvertedAmtMap = cryptoWalletCalculator.getCryptoCurrencyConvertedAmtMap();
 
-        assertTrue(cryptocurrencyConvertedAmtMap.isEmpty());
+        assertTrue(cryptoCurrencyConvertedAmtMap.isEmpty());
     }
 }

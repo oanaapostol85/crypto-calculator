@@ -1,4 +1,4 @@
-package com.swissre.cryptocalculator.filereader;
+package com.swissre.cryptocalculator;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -13,13 +13,7 @@ public class CryptoWalletFileReader {
 
     private static final Pattern DELIMITER = Pattern.compile("=");
 
-    private final String filePath;
-
-    public CryptoWalletFileReader(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public Map<String, BigDecimal> readFile() {
+    public Map<String, BigDecimal> readFile(String filePath) {
         try {
             return Files.readAllLines(Paths.get(filePath))
                     .stream()

@@ -11,9 +11,10 @@ public class CryptoWalletApplication {
         String cryptoWalletFilePath = readCryptoWalletFilePath(scanner);
         String currency = readCurrency(scanner);
 
-        new CryptoWalletCalculator()
+        new CryptoWalletCalculatorBuilder()
                 .withCryptoWalletFilePath(cryptoWalletFilePath)
                 .withCurrency(currency)
+                .build()
                 .calculate()
                 .prettyPrint();
     }
