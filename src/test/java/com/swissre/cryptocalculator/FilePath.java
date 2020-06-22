@@ -1,6 +1,8 @@
 package com.swissre.cryptocalculator;
 
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 public class FilePath {
 
@@ -11,6 +13,10 @@ public class FilePath {
             throw new IllegalArgumentException("File is not found!");
         }
 
-        return resource.getFile();
+        try {
+            return Paths.get(resource.toURI()).toString();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("File URL is invalid!");
+        }
     }
 }
