@@ -16,13 +16,14 @@ public class CryptoWalletCalculator {
 
     private CryptoCurrencyConverter cryptoCurrencyConverter;
 
+    private Map<String, BigDecimal> cryptoCurrencyAmtMap;
+
     private Map<String, BigDecimal> cryptoCurrencyConvertedAmtMap;
 
     private BigDecimal totalAmt;
 
     public CryptoWalletCalculator calculate() {
-        Map<String, BigDecimal> cryptoCurrencyAmtMap = new CryptoWalletFileReader()
-                .readFile(cryptoWalletFilePath);
+        cryptoCurrencyAmtMap = new CryptoWalletFileReader().readFile(cryptoWalletFilePath);
 
         cryptoCurrencyConvertedAmtMap = convert(cryptoCurrencyAmtMap, currency);
         totalAmt = calculateTotalAmt(cryptoCurrencyConvertedAmtMap);
@@ -33,7 +34,7 @@ public class CryptoWalletCalculator {
     public void prettyPrint() {
         cryptoCurrencyConvertedAmtMap
                 .forEach((cryptoCurrency, price) ->
-                        System.out.println(format("%s=%.2f %s", cryptoCurrency, price, currency)));
+                        System.out.println(format("%.2f %s=%.2f %s", cryptoCurrencyAmtMap.get(cryptoCurrency), cryptoCurrency, price, currency)));
 
         System.out.println(format("Total=%.2f %s", totalAmt, currency));
     }
