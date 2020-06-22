@@ -14,10 +14,10 @@ Application input:
 ### Getting Started with Java
 - Run the following commands in the project root:
 
-      mkdir out;
-      javac -d out src/main/java/com/swissre/cryptocalculator/converter/*.java;
-      javac -d out -cp out src/main/java/com/swissre/cryptocalculator/*.java;
-      java -cp out com.swissre.cryptocalculator.CryptoWalletApplication;
+      mkdir out &&
+      javac -d out src/main/java/com/swissre/cryptocalculator/converter/*.java &&
+      javac -d out -cp out src/main/java/com/swissre/cryptocalculator/*.java &&
+      java -cp out com.swissre.cryptocalculator.CryptoWalletApplication
       
 - Enter the path of the file containing crypto currencies amount when prompted 
    
@@ -25,9 +25,9 @@ Application input:
 - Run previous steps to compile the classes under test
 - Run the following commands in the project root:
 
-      javac -d out -cp out:lib/junit-platform-console-standalone-1.7.0-M1.jar src/test/java/com/swissre/cryptocalculator/converter/*.java;
-      javac -d out -cp out:lib/junit-platform-console-standalone-1.7.0-M1.jar src/test/java/com/swissre/cryptocalculator/*.java;
-      java -jar lib/junit-platform-console-standalone-1.7.0-M1.jar -cp out:src/test/resources --scan-classpath;  
+      javac -d out -cp out:lib/junit-platform-console-standalone-1.7.0-M1.jar src/test/java/com/swissre/cryptocalculator/converter/*.java &&
+      javac -d out -cp out:lib/junit-platform-console-standalone-1.7.0-M1.jar src/test/java/com/swissre/cryptocalculator/*.java &&
+      java -jar lib/junit-platform-console-standalone-1.7.0-M1.jar -cp out:src/test/resources --scan-classpath  
 
 ### Getting Started with Gradle Wrapper
 - Run the following command in the project root:
