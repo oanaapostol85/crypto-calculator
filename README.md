@@ -12,20 +12,28 @@ Application input:
 ## Getting Started 
 
 ### Getting Started with Java
-- Run the following commands in the project root:
+- Run the following command in the project root:
 
-      mkdir out &&
-      javac -d out src/main/java/com/swissre/cryptocalculator/converter/*.java src/main/java/com/swissre/cryptocalculator/*.java &&
-      java -cp out com.swissre.cryptocalculator.CryptoWalletApplication
+  Mac/Linux
+
+      ./run.sh
+
+  Windows
+
+      run.bat
       
 - Enter the path of the file containing crypto currencies amount when prompted 
    
 #### Run unit tests with JUnit 5 Platform
-- Run previous steps to compile the classes under test
-- Run the following commands in the project root:
+- Run the following command in the project root:
 
-      javac -d out -cp out:lib/junit-platform-console-standalone-1.7.0-M1.jar src/test/java/com/swissre/cryptocalculator/converter/*.java src/test/java/com/swissre/cryptocalculator/*.java &&
-      java -jar lib/junit-platform-console-standalone-1.7.0-M1.jar -cp out:src/test/resources --scan-classpath  
+  Mac/Linux
+
+      ./test.sh
+
+  Windows
+
+      test.bat
 
 ### Getting Started with Gradle Wrapper
 - Run the following command in the project root:
