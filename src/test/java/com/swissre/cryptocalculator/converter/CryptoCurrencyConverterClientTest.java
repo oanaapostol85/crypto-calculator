@@ -2,12 +2,15 @@ package com.swissre.cryptocalculator.converter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -57,33 +60,23 @@ public class CryptoCurrencyConverterClientTest {
         assertEquals(8311.5, conversionRate.doubleValue());
     }
 
-    @Test
-    public void givenWrongResponseBodyFormat_whenReadConversionRateFromResponse_thenException() {
+    @ParameterizedTest
+    @MethodSource
+    public void givenInvalidResponse_whenReadConversionRateFromResponse_thenException(HttpURLConnection httpURLConnection) {
         assertThrows(InvalidCryptoCurrencyResponseException.class,
-                () -> cryptoCurrencyConverterClient.readConversionRateFromResponse(new MockHttpURLConnection(200, "8311.5")));
+                () -> cryptoCurrencyConverterClient.readConversionRateFromResponse(httpURLConnection));
     }
 
-    @Test
-    public void givenWrongConversionRateFormatInResponseBody_whenReadConversionRateFromResponse_thenException() {
-        assertThrows(InvalidCryptoCurrencyResponseException.class,
-                () -> cryptoCurrencyConverterClient.readConversionRateFromResponse(new MockHttpURLConnection(200, "{\"EUR\":8311.5d}")));
-    }
-
-    @Test
-    public void givenNotFoundResponseCode_whenReadConversionRateFromResponse_thenException() {
-        assertThrows(InvalidCryptoCurrencyResponseException.class,
-                () -> cryptoCurrencyConverterClient.readConversionRateFromResponse(new MockHttpURLConnection(404, null)));
-    }
-
-    @Test
-    public void givenInvalidConnection_whenReadConversionRateFromResponse_thenException() {
-        assertThrows(InvalidCryptoCurrencyResponseException.class,
-                () -> cryptoCurrencyConverterClient.readConversionRateFromResponse(new MockHttpURLConnection(200, null) {
+    private static Stream<HttpURLConnection> givenInvalidResponse_whenReadConversionRateFromResponse_thenException() {
+        return Stream.of(new MockHttpURLConnection(200, "8311.5"),
+                new MockHttpURLConnection(200, "{\"EUR\":8311.5d}"),
+                new MockHttpURLConnection(404, null),
+                new MockHttpURLConnection(200, null) {
                     @Override
                     public InputStream getInputStream() throws IOException {
                         throw new IOException("Unable to connect to server!");
                     }
-                }));
+                });
     }
 
     @Test
